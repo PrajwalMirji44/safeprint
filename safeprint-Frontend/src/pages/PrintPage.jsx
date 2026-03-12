@@ -42,7 +42,7 @@ const PrintPage = () => {
       setIsPrinting(true);
       setPrintResult(null);
       setStatus('Sending to printer...');
-      await axios.post(`http://localhost:5000/api/files/print/${code}`);
+      await axios.post(`https://safeprint-backend.onrender.com/api/files/print/${code}`);
       setStatus('✅ Document sent to printer & deleted from server.');
       setPrintResult('success');
       setPreviewUrl('');
