@@ -10,25 +10,33 @@ const UploadPage = () => {
   const [downloadUrl, setDownloadUrl] = useState('');
 
   const handleUpload = async () => {
-    if (!file) {
-      setStatus('Please select a file first.');
-      return;
-    }
+  if (!file) {
+    setStatus('Please select a file first.');
+    return;
+  }
 
-    const formData = new FormData();
-    formData.append('file', file);
+  const formData = new FormData();
+  formData.append('file', file);
 
-    try {
-      setStatus('Uploading...');
-      const res = await axios.post("https://safeprint-backend.onrender.com/api/files/upload", formData);
-      setCode(res.data.code);
-      setDownloadUrl(`https://safeprint-backend.onrender.com/download/${res.data.code}`);
-      setStatus('✅ File uploaded successfully.');
-    } catch (err) {
-      console.error(err);
-      setStatus('❌ Something went wrong during upload.');
-    }
-  };
+  try {
+    setStatus('Uploading...');
+    console.log("Sending upload request...");
+
+    const res = await axios.post(
+      "https://safeprint-backend.onrender.com/api/files/upload",
+      formData
+    );
+
+    console.log("Upload response:", res.data);
+
+    setCode(res.data.code);
+    setDownloadUrl(`https://safeprint-backend.onrender.com/download/${res.data.code}`);
+    setStatus('File uploaded successfully.');
+  } catch (err) {
+    console.error("UPLOAD ERROR:", err);
+    setStatus('Upload failed. Check console.');
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 to-purple-200 p-4">
