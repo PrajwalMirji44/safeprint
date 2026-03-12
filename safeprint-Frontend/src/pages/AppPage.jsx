@@ -36,7 +36,7 @@ const AppPage = () => {
     try {
       setIsUploading(true);
       setUploadStatus('Uploading...');
-      const res = await axios.post('http://localhost:5000/api/files/upload', formData);
+      const res = await axios.post("https://safeprint-backend.onrender.com/api/files/upload", formData);
       setUploadCode(res.data.code);
       setDownloadUrl(`http://localhost:5000/api/files/download/${res.data.code}`);
       setUploadStatus('✅ File uploaded successfully.');
