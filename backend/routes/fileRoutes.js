@@ -46,7 +46,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
 // Stream & Decrypt File for Viewing
 router.get('/download/:code', (req, res) => {
-  const code = req.params.code;
+  const code = req.params.code.toLowerCase();
   const fileData = fileStore[code];
 
   if (!fileData) {
@@ -97,7 +97,7 @@ router.get('/download/:code', (req, res) => {
 
 // Direct Print — PDF never sent to browser
 router.post('/print/:code', async (req, res) => {
-  const code = req.params.code;
+  const code = req.params.code.toLowerCase();
   const fileData = fileStore[code];
 
   if (!fileData) {
