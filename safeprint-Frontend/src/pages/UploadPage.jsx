@@ -22,7 +22,7 @@ const UploadPage = () => {
       setStatus('Uploading...');
       const res = await axios.post("https://safeprint-backend.onrender.com/api/files/upload", formData);
       setCode(res.data.code);
-      setDownloadUrl(`http://localhost:5000/download/${res.data.code}`);
+      setDownloadUrl(`https://safeprint-backend.onrender.com/download/${res.data.code}`);
       setStatus('✅ File uploaded successfully.');
     } catch (err) {
       console.error(err);
