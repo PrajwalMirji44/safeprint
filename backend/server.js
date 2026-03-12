@@ -4,7 +4,10 @@ const fileRoutes = require('./routes/fileRoutes');
 
 const app = express();
 app.use(cors({
-  exposedHeaders: ['Content-Disposition']
+  origin: "*",
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"],
+  exposedHeaders: ["Content-Disposition"]
 }));
 app.use(express.json());
 
