@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { QRCodeCanvas } from 'qrcode.react';
 import { QrReader } from 'react-qr-reader';
@@ -26,6 +26,30 @@ const AppPage = () => {
   const [previewUrl, setPreviewUrl] = useState('');
   const [previewContentType, setPreviewContentType] = useState('');
 
+  // --- Auto-load from URL ---
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const codeFromUrl = params.get('code');
+    if (codeFromUrl) {
+      setActiveTab('download');
+      setDownloadCode(codeFromUrl);
+      // Auto-fetch preview
+      const fetchPreview = async (code) => {
+        try {
+          setDownloadStatus('Fetching preview...');
+          const response = await axios.get(`${API_BASE_URL}/download/${code}`);
+          setPreviewUrl(`${API_BASE_URL}/download/${code}`);
+          setPreviewContentType(response.headers['content-type'] || 'application/pdf');
+          setDownloadStatus('✅ Preview loaded. Click Print below.');
+        } catch (error) {
+          console.error(error);
+          setDownloadStatus('❌ Invalid code or file has been deleted.');
+        }
+      };
+      fetchPreview(codeFromUrl);
+    }
+  }, []);
+
   const handleUpload = async () => {
     if (!file) {
       setUploadStatus('Please select a file first.');
@@ -40,7 +64,9 @@ const AppPage = () => {
       setUploadStatus('Uploading...');
       const res = await axios.post(`${API_BASE_URL}/upload`, formData);
       setUploadCode(res.data.code);
-      setDownloadUrl(`${API_BASE_URL}/download/${res.data.code}`);
+      // Point QR code to frontend print page with the code as a parameter
+      const baseUrl = window.location.origin;
+      setDownloadUrl(`${baseUrl}/print?code=${res.data.code}`);
       setUploadStatus('✅ File uploaded successfully.');
     } catch (err) {
       console.error(err);
