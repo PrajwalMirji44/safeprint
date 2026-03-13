@@ -22,14 +22,10 @@ const PrintPage = () => {
     try {
       setStatus('Fetching preview...');
       setPrintResult(null);
-      // Using the same endpoint as AppPage for consistency
-      const response = await axios.get(`${API_BASE_URL}/download/${code}`, {
-        responseType: 'blob',
-      });
+      // Verify code exists first
+      const response = await axios.get(`${API_BASE_URL}/download/${code}`);
       
-      const blob = new Blob([response.data], { type: response.headers['content-type'] });
-      const url = window.URL.createObjectURL(blob);
-      setPreviewUrl(url);
+      setPreviewUrl(`${API_BASE_URL}/download/${code}`);
       setPreviewContentType(response.headers['content-type'] || 'application/pdf');
       setStatus('✅ Preview loaded. Ready to print.');
     } catch (error) {

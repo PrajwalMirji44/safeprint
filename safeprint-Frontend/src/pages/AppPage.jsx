@@ -57,12 +57,10 @@ const AppPage = () => {
     try {
       setDownloadStatus('Fetching preview...');
       setPrintResult(null);
-      const response = await axios.get(`${API_BASE_URL}/download/${downloadCode}`, {
-        responseType: 'blob',
-      });
-      const blob = new Blob([response.data], { type: response.headers['content-type'] });
-      const url = window.URL.createObjectURL(blob);
-      setPreviewUrl(url);
+      // Verify code exists first
+      const response = await axios.get(`${API_BASE_URL}/download/${downloadCode}`);
+      
+      setPreviewUrl(`${API_BASE_URL}/download/${downloadCode}`);
       setPreviewContentType(response.headers['content-type'] || 'application/pdf');
       setDownloadStatus('✅ Preview loaded. Click Print below.');
     } catch (error) {
