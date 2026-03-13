@@ -4,6 +4,7 @@ import { QRCodeCanvas } from 'qrcode.react';
 import { QrReader } from 'react-qr-reader';
 import { Upload, Printer, Copy, Check, Loader2 } from 'lucide-react';
 import { API_BASE_URL } from '../config';
+import PdfCanvasViewer from '../components/PdfCanvasViewer';
 
 const AppPage = () => {
   const [activeTab, setActiveTab] = useState('upload'); // 'upload' or 'download'
@@ -189,7 +190,7 @@ const AppPage = () => {
                     {previewContentType.includes('image') ? (
                        <img src={previewUrl} alt="Secure Preview" className="w-full h-full object-contain" />
                     ) : (
-                       <iframe id="previewIframe" src={`${previewUrl}#toolbar=0&navpanes=0&scrollbar=0`} title="Secure Preview" className="w-full h-full border-none" />
+                       <PdfCanvasViewer url={previewUrl} />
                     )}
                   </div>
                   <button

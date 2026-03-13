@@ -3,6 +3,7 @@ import axios from 'axios';
 import { QrReader } from 'react-qr-reader';
 import { Printer, Loader2 } from 'lucide-react';
 import { API_BASE_URL } from '../config';
+import PdfCanvasViewer from '../components/PdfCanvasViewer';
 
 const PrintPage = () => {
   const [code, setCode] = useState('');
@@ -135,11 +136,7 @@ const PrintPage = () => {
               {previewContentType.includes('image') ? (
                 <img src={previewUrl} alt="Secure Preview" className="w-full h-full object-contain" />
               ) : (
-                <iframe
-                  src={`${previewUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-                  title="Secure Preview"
-                  className="w-full h-full border-none"
-                />
+                <PdfCanvasViewer url={previewUrl} />
               )}
             </div>
 
