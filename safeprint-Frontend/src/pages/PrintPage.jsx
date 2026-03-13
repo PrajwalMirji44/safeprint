@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { QrReader } from 'react-qr-reader';
 import { Printer, Loader2 } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 const PrintPage = () => {
   const [code, setCode] = useState('');
@@ -22,7 +23,7 @@ const PrintPage = () => {
       setStatus('Fetching preview...');
       setPrintResult(null);
       // Using the same endpoint as AppPage for consistency
-      const response = await axios.get(`http://localhost:5000/api/files/download/${code}`, {
+      const response = await axios.get(`${API_BASE_URL}/download/${code}`, {
         responseType: 'blob',
       });
       
@@ -42,7 +43,7 @@ const PrintPage = () => {
       setIsPrinting(true);
       setPrintResult(null);
       setStatus('Sending to printer...');
-      await axios.post(`https://safeprint-backend.onrender.com/api/files/print/${code}`);
+      await axios.post(`${API_BASE_URL}/print/${code}`);
       setStatus('✅ Document sent to printer & deleted from server.');
       setPrintResult('success');
       setPreviewUrl('');

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { QRCodeCanvas } from 'qrcode.react';
 import { QrReader } from 'react-qr-reader';
 import { Upload, Printer, Copy, Check, Loader2 } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 const AppPage = () => {
   const [activeTab, setActiveTab] = useState('upload'); // 'upload' or 'download'
@@ -36,9 +37,9 @@ const AppPage = () => {
     try {
       setIsUploading(true);
       setUploadStatus('Uploading...');
-      const res = await axios.post("https://safeprint-backend.onrender.com/api/files/upload", formData);
+      const res = await axios.post(`${API_BASE_URL}/upload`, formData);
       setUploadCode(res.data.code);
-      setDownloadUrl(`http://localhost:5000/api/files/download/${res.data.code}`);
+      setDownloadUrl(`${API_BASE_URL}/download/${res.data.code}`);
       setUploadStatus('✅ File uploaded successfully.');
     } catch (err) {
       console.error(err);
@@ -56,7 +57,7 @@ const AppPage = () => {
     try {
       setDownloadStatus('Fetching preview...');
       setPrintResult(null);
-      const response = await axios.get(`http://localhost:5000/api/files/download/${downloadCode}`, {
+      const response = await axios.get(`${API_BASE_URL}/download/${downloadCode}`, {
         responseType: 'blob',
       });
       const blob = new Blob([response.data], { type: response.headers['content-type'] });
@@ -75,7 +76,7 @@ const AppPage = () => {
       setIsPrinting(true);
       setDownloadStatus('Sending to printer...');
       setPrintResult(null);
-      await axios.post(`http://localhost:5000/api/files/print/${downloadCode}`);
+      await axios.post(`${API_BASE_URL}/print/${downloadCode}`);
       setDownloadStatus('✅ Document printed & permanently deleted.');
       setPrintResult('success');
       setPreviewUrl('');
