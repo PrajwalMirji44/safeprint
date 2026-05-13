@@ -126,6 +126,18 @@ router.post('/print/:code', async (req, res) => {
   fs.writeFileSync(tmpFile, decrypted);
 
   try {
+    // Avoid popup on local machines with virtual printers
+    try {
+      const defaultPrinter = await ptp.getDefaultPrinter();
+      if (defaultPrinter && ['Microsoft Print to PDF', 'OneNote (Desktop)', 'Microsoft XPS Document Writer', 'OneNote for Windows 10'].includes(defaultPrinter.deviceId)) {
+        console.log(`[Local Dev] Virtual printer detected: ${defaultPrinter.deviceId}. Rejecting print job to avoid popup.`);
+        if (fs.existsSync(tmpFile)) fs.unlinkSync(tmpFile);
+        return res.status(503).json({ error: 'Failed to send to printer. Make sure a printer is connected and set as default.' });
+      }
+    } catch (e) {
+      // Proceed if getDefaultPrinter fails
+    }
+
     // Check if any printers are available
     const printers = await ptp.getPrinters();
     if (!printers || printers.length === 0) {
